@@ -1,17 +1,19 @@
 import P from "prop-types";
 import React, { useState } from "react";
 import { Modal, Box, Typography } from "@material-ui/core";
+import { Close } from "@material-ui/icons";
 import axios from "axios";
 
 import "./style.css";
 
 // const BASE_PATH = "https://api-projeto-tdig.herokuapp.com";
 const BASE_PATH = "http://127.0.0.1:8000";
+const auxKeys = ["cep", "rua", "numero", "cidade", "estado", "pais"];
 
 export const Endereco = ({ data }) => {
   const [modal, setModal] = useState(false);
   const [endereco, setEndereco] = useState({});
-  // const [sendData, setSendData] = useState(false);
+  const [create, setCreate] = useState(null);
 
   function handleEndereco(id) {
     axios
@@ -25,7 +27,45 @@ export const Endereco = ({ data }) => {
 
   const exec = () => {
     setModal(!modal);
-    handleEndereco(data.endereco_id);
+    if (data.endereco_id) {
+      handleEndereco(data.endereco_id);
+      setCreate(false);
+    } else {
+      console.log(data.id);
+      setCreate(true);
+      setEndereco({
+        cep: "",
+        rua: "",
+        numero: "",
+        cidade: "",
+        estado: "",
+        pais: "",
+      });
+    }
+  };
+
+  const handlerChange = (event, key) => {
+    setEndereco({ ...endereco, [key]: event.target.value });
+    console.log(event.target.value);
+  };
+
+  const handlerCreateEndereco = () => {
+    axios
+      .get(`${BASE_PATH}/endereco/create/${id}`)
+      .then((response) => {
+        console.log(response.data);
+        setEndereco(response.data);
+      })
+      .catch((error) => console.log(error));
+  };
+  const handlerUpdateEndereco = () => {};
+
+  const execCreateORUpdate = () => {
+    if (create) {
+      handlerCreateEndereco();
+    } else {
+      handlerUpdateEndereco();
+    }
   };
 
   return (
@@ -38,20 +78,37 @@ export const Endereco = ({ data }) => {
           className="area-modal"
         >
           <Box className="box-modal">
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Endereço do {data.nome}
-            </Typography>
+            <div className="header-modal">
+              <h4>
+                Endereço do/da <strong>{data.nome}</strong>
+              </h4>
+              <Close onClick={() => setModal(!modal)} className="close-icon" />
+            </div>
             <div>
-              {Object.keys(endereco).map((key, value) => (
-                // <p>{`${key} - ${endereco[key]}`}</p>
-                <div className="inputs">
+              {auxKeys.map((key) => (
+                <div className="inputs" key={key}>
                   <label htmlFor={`${key}`}>{key}</label>
-                  <input id={`${key}`} type="text" value={endereco[key]} />
+                  <input
+                    id={`${key}`}
+                    type="text"
+                    value={endereco[key]}
+                    onChange={(e) => handlerChange(e, key)}
+                  />
                 </div>
               ))}
             </div>
 
-            <button onClick={() => setModal(!modal)}>Salvar</button>
+            <div className="container-btn">
+              <button
+                className="btn-endereco"
+                onClick={() => {
+                  console.log(endereco);
+                  return setModal(!modal);
+                }}
+              >
+                Salvar
+              </button>
+            </div>
           </Box>
         </Modal>
       ) : (
