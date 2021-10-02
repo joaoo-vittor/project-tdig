@@ -4,12 +4,11 @@ import axios from "axios";
 import MaterialTable from "material-table";
 import { Endereco } from "../Endereco";
 
-const BASE_PATH = "https://api-projeto-tdig.herokuapp.com";
+// const BASE_PATH = "https://api-projeto-tdig.herokuapp.com";
+const BASE_PATH = "http://127.0.0.1:8000";
 
 const GerenciamentoAlunos = (props) => {
-  const { useState } = React;
-
-  const [modal, setModal] = useState(false);
+  const { useState, useEffect } = React;
 
   const [columns, setAlunos] = useState([
     { title: "Id", field: "id" },
@@ -17,7 +16,7 @@ const GerenciamentoAlunos = (props) => {
     { title: "matricula", field: "matricula", type: "numerico" },
     { title: "nome", field: "nome" },
     {
-      title: "endereco",
+      title: "Id do endereco",
       field: "endereco_id",
       type: "numerico",
       render: (rowData) => <Endereco data={rowData} />,
@@ -31,7 +30,6 @@ const GerenciamentoAlunos = (props) => {
     axios
       .get(`${BASE_PATH}/alunos/read`)
       .then((response) => {
-        // create an array of contacts only with relevant data
         console.log(response.data);
         const alunos = response.data.map((c) => {
           return {
@@ -50,8 +48,7 @@ const GerenciamentoAlunos = (props) => {
 
   function handleCreate(newData) {
     axios
-      .post("http://localhost:8080/TemplateWS/rest/ws/cadastraAluno", {
-        id: newData.id,
+      .post(`${BASE_PATH}/alunos/create`, {
         cpf: newData.cpf,
         matricula: newData.matricula,
         nome: newData.nome,
@@ -65,12 +62,10 @@ const GerenciamentoAlunos = (props) => {
 
   function handleUpdate(newData) {
     axios
-      .post("http://localhost:8080/TemplateWS/rest/ws/atualizaAluno", {
-        id: newData.id,
+      .put(`${BASE_PATH}/alunos/update/${newData.id}`, {
         cpf: newData.cpf,
         matricula: newData.matricula,
         nome: newData.nome,
-        endereco_id: newData.endereco_id,
         curso: newData.curso,
       })
       .then(function (response) {
@@ -78,10 +73,19 @@ const GerenciamentoAlunos = (props) => {
       });
   }
 
+  function handleDelete(data) {
+    axios
+      .delete(`${BASE_PATH}/alunos/delete/${data.id}`)
+      .then(function (response) {
+        console.log("deletado com sucesso");
+      });
+  }
+
+  useEffect(() => {
+    handleClick();
+  }, []);
+
   return [
-    <Button id="aew" color="primary" onClick={handleClick}>
-      Consulta
-    </Button>,
     <MaterialTable
       title="Gerenciamento de Alunos"
       columns={columns}
@@ -91,7 +95,7 @@ const GerenciamentoAlunos = (props) => {
           new Promise((resolve, reject) => {
             setTimeout(() => {
               handleCreate(newData);
-              /*setData([...data, newData]);*/
+              setData([...data, newData]);
 
               resolve();
             }, 1000);
@@ -103,6 +107,7 @@ const GerenciamentoAlunos = (props) => {
               const index = oldData.tableData.id;
               dataUpdate[index] = newData;
               setData([...dataUpdate]);
+              handleUpdate(newData);
 
               resolve();
             }, 1000);
@@ -114,6 +119,7 @@ const GerenciamentoAlunos = (props) => {
               const index = oldData.tableData.id;
               dataDelete.splice(index, 1);
               setData([...dataDelete]);
+              handleDelete(oldData);
 
               resolve();
             }, 1000);

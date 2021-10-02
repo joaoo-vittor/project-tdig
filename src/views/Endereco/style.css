@@ -6,7 +6,8 @@
   width: inherit;
 }
 
-.modal > h6 {
+.id-endereco > h6 {
+  text-decoration: underline;
   color: blue;
   cursor: pointer;
 }
