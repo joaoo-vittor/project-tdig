@@ -1,6 +1,6 @@
 import P from "prop-types";
 import React, { useState } from "react";
-import { Modal, Box, Typography } from "@material-ui/core";
+import { Modal, Box } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 import axios from "axios";
 
@@ -10,7 +10,7 @@ import "./style.css";
 const BASE_PATH = "http://127.0.0.1:8000";
 const auxKeys = ["cep", "rua", "numero", "cidade", "estado", "pais"];
 
-export const Endereco = ({ data }) => {
+export const Endereco = ({ data, loading, setLoading }) => {
   const [modal, setModal] = useState(false);
   const [endereco, setEndereco] = useState({});
   const [create, setCreate] = useState(null);
@@ -49,16 +49,48 @@ export const Endereco = ({ data }) => {
     console.log(event.target.value);
   };
 
+  const updateAlunoOrProfessor = (id) => {
+    if (Object.keys(data).includes("cpf")) {
+      axios
+        .put(`${BASE_PATH}/alunos/update/${data.id}`, {
+          endereco_id: id,
+        })
+        .then((response) => {
+          console.log(response.data);
+          setLoading(!loading);
+        })
+        .catch((error) => console.log(error));
+    } else {
+      axios
+        .put(`${BASE_PATH}/professor/update/${data.id}`, {
+          id: id,
+        })
+        .then((response) => {
+          console.log(response.data);
+          setLoading(!loading);
+        })
+        .catch((error) => console.log(error));
+    }
+  };
+
   const handlerCreateEndereco = () => {
     axios
-      .get(`${BASE_PATH}/endereco/create/${id}`)
+      .post(`${BASE_PATH}/endereco/create`, { ...endereco })
       .then((response) => {
         console.log(response.data);
-        setEndereco(response.data);
+        updateAlunoOrProfessor(response.data.id);
       })
       .catch((error) => console.log(error));
   };
-  const handlerUpdateEndereco = () => {};
+
+  const handlerUpdateEndereco = () => {
+    axios
+      .put(`${BASE_PATH}/endereco/update/${data.id}`, { ...endereco })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => console.log(error));
+  };
 
   const execCreateORUpdate = () => {
     if (create) {
@@ -66,17 +98,14 @@ export const Endereco = ({ data }) => {
     } else {
       handlerUpdateEndereco();
     }
+
+    setModal(!modal);
   };
 
   return (
     <>
       {modal ? (
-        <Modal
-          open={modal}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-          className="area-modal"
-        >
+        <Modal open={modal} className="area-modal">
           <Box className="box-modal">
             <div className="header-modal">
               <h4>
@@ -101,10 +130,7 @@ export const Endereco = ({ data }) => {
             <div className="container-btn">
               <button
                 className="btn-endereco"
-                onClick={() => {
-                  console.log(endereco);
-                  return setModal(!modal);
-                }}
+                onClick={() => execCreateORUpdate()}
               >
                 Salvar
               </button>
@@ -122,4 +148,6 @@ export const Endereco = ({ data }) => {
 
 Endereco.propTypes = {
   data: P.object.isRequired,
+  setLoading: P.func.isRequired,
+  loading: P.bool.isRequired,
 };

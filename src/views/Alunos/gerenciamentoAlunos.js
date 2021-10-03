@@ -1,4 +1,3 @@
-import { Button } from "@material-ui/core";
 import React from "react";
 import axios from "axios";
 import MaterialTable from "material-table";
@@ -9,6 +8,8 @@ const BASE_PATH = "http://127.0.0.1:8000";
 
 const GerenciamentoAlunos = (props) => {
   const { useState, useEffect } = React;
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [columns, setAlunos] = useState([
     { title: "Id", field: "id" },
@@ -19,12 +20,14 @@ const GerenciamentoAlunos = (props) => {
       title: "Id do endereco",
       field: "endereco_id",
       type: "numerico",
-      render: (rowData) => <Endereco data={rowData} />,
+      render: (rowData) => (
+        <Endereco data={rowData} loading={loading} setLoading={setLoading} />
+      ),
     },
     { title: "curso", field: "curso" },
   ]);
 
-  const [data, setData] = useState([]);
+  console.log(`LOADING - ${loading}`);
 
   function handleClick() {
     axios
@@ -56,6 +59,7 @@ const GerenciamentoAlunos = (props) => {
         curso: newData.curso,
       })
       .then(function (response) {
+        handleClick();
         console.log("salvo com sucesso");
       });
   }
@@ -69,6 +73,7 @@ const GerenciamentoAlunos = (props) => {
         curso: newData.curso,
       })
       .then(function (response) {
+        handleClick();
         console.log("atualizado com sucesso");
       });
   }
@@ -77,6 +82,7 @@ const GerenciamentoAlunos = (props) => {
     axios
       .delete(`${BASE_PATH}/alunos/delete/${data.id}`)
       .then(function (response) {
+        handleClick();
         console.log("deletado com sucesso");
       });
   }
@@ -84,6 +90,13 @@ const GerenciamentoAlunos = (props) => {
   useEffect(() => {
     handleClick();
   }, []);
+
+  if (loading) {
+    ((loading) => {
+      handleClick();
+      setLoading(!loading);
+    })(loading);
+  }
 
   return [
     <MaterialTable
@@ -95,7 +108,6 @@ const GerenciamentoAlunos = (props) => {
           new Promise((resolve, reject) => {
             setTimeout(() => {
               handleCreate(newData);
-              setData([...data, newData]);
 
               resolve();
             }, 1000);
@@ -103,10 +115,6 @@ const GerenciamentoAlunos = (props) => {
         onRowUpdate: (newData, oldData) =>
           new Promise((resolve, reject) => {
             setTimeout(() => {
-              const dataUpdate = [...data];
-              const index = oldData.tableData.id;
-              dataUpdate[index] = newData;
-              setData([...dataUpdate]);
               handleUpdate(newData);
 
               resolve();
@@ -115,10 +123,6 @@ const GerenciamentoAlunos = (props) => {
         onRowDelete: (oldData) =>
           new Promise((resolve, reject) => {
             setTimeout(() => {
-              const dataDelete = [...data];
-              const index = oldData.tableData.id;
-              dataDelete.splice(index, 1);
-              setData([...dataDelete]);
               handleDelete(oldData);
 
               resolve();
