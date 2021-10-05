@@ -1,0 +1,97 @@
+.modal {
+  display: flex;
+  text-decoration: underline;
+  flex: 1;
+  color: blue;
+  width: inherit;
+}
+
+.id-endereco > h6 {
+  text-decoration: underline;
+  margin: 0;
+  color: blue;
+  cursor: pointer;
+}
+
+.box-modal {
+  padding: 20px;
+  width: 700px;
+  height: 400px;
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+.area-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container-btn {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn {
+  cursor: pointer;
+  padding: 8px 15px;
+  border-radius: 5px;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.btn-endereco-salvar {
+  background-color: rgb(2, 2, 175);
+}
+
+.btn-endereco-deletar {
+  background-color: rgb(255, 0, 0);
+}
+
+.btn-endereco-salvar:hover {
+  background-color: rgba(2, 2, 175, 0.5);
+}
+
+.btn-endereco-deletar:hover {
+  background-color: rgba(255, 0, 0, 0.5);
+}
+
+.inputs {
+  margin-top: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.inputs > input {
+  padding: 2px 5px;
+  height: 22px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+}
+
+.inputs > label {
+  color: rgb(195, 72, 88);
+}
+
+.header-modal {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-modal > h4 {
+  margin: 0;
+  font-weight: bolder;
+}
+
+.header-modal > svg {
+  cursor: pointer;
+}
+
+.header-modal > svg:hover {
+  color: #ccc;
+}
