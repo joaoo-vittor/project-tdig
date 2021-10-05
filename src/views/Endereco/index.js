@@ -91,6 +91,15 @@ export const Endereco = ({ data, loading, setLoading, user }) => {
       .catch((error) => console.log(error));
   };
 
+  const handlerDeleteEndereco = () => {
+    axios
+      .delete(`${BASE_PATH}/endereco/delete/${data.endereco_id}`)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => console.log(error));
+  };
+
   const execCreateORUpdate = () => {
     if (create) {
       handlerCreateEndereco();
@@ -102,8 +111,8 @@ export const Endereco = ({ data, loading, setLoading, user }) => {
   };
 
   const deleteEndereco = () => {
-    if (user === "aluno") console.log("DELETE ALUNO", data.id);
-    if (user === "professor") console.log("DELETE PROFESSOR", data.id);
+    handlerDeleteEndereco();
+    updateAlunoOrProfessor(null);
     setModal(!modal);
   };
 

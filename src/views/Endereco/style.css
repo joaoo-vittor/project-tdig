@@ -8,10 +8,7 @@
 
 .id-endereco > h6 {
   text-decoration: underline;
-<<<<<<< HEAD
   margin: 0;
-=======
->>>>>>> 44a7d806207c3b235abfe372a7cbd5038546c43a
   color: blue;
   cursor: pointer;
 }
@@ -33,22 +30,14 @@
 .container-btn {
   margin-top: 15px;
   display: flex;
-<<<<<<< HEAD
   justify-content: space-between;
 }
 
 .btn {
-=======
-  justify-content: flex-end;
-}
-
-.btn-endereco {
->>>>>>> 44a7d806207c3b235abfe372a7cbd5038546c43a
   cursor: pointer;
   padding: 8px 15px;
   border-radius: 5px;
   border: none;
-<<<<<<< HEAD
   color: #fff;
   font-weight: 600;
   margin-top: 10px;
@@ -70,17 +59,6 @@
   background-color: rgba(255, 0, 0, 0.5);
 }
 
-=======
-  background-color: rgb(2, 2, 175);
-  color: #fff;
-  font-weight: 600;
-}
-
-.btn-endereco:hover {
-  background-color: rgba(2, 2, 175, 0.5);
-}
-
->>>>>>> 44a7d806207c3b235abfe372a7cbd5038546c43a
 .inputs {
   margin-top: 5px;
   display: flex;
@@ -112,11 +90,8 @@
 
 .header-modal > svg {
   cursor: pointer;
-<<<<<<< HEAD
 }
 
 .header-modal > svg:hover {
   color: #ccc;
-=======
->>>>>>> 44a7d806207c3b235abfe372a7cbd5038546c43a
 }
